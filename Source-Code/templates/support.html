@@ -1,0 +1,506 @@
+{% extends "base.html" %}
+
+{% block title %}Support - Help Center & Customer Service{% endblock %}
+
+{% block content %}
+<style>
+    .support-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 4rem 2rem;
+        text-align: center;
+        color: white;
+        margin-bottom: 3rem;
+        border-radius: 0 0 50px 50px;
+    }
+
+    .support-hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        animation: fadeInDown 0.8s ease;
+    }
+
+    .support-hero p {
+        font-size: 1.2rem;
+        opacity: 0.95;
+        animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .support-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem 3rem;
+    }
+
+    /* Support Cards Grid */
+    .support-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-bottom: 4rem;
+    }
+
+    .support-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .support-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .support-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(102,126,234,0.2);
+    }
+
+    .support-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: inline-block;
+    }
+
+    .support-card h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+
+    .support-card p {
+        color: #666;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+    }
+
+    .support-card .email {
+        font-size: 0.9rem;
+        color: #667eea;
+        font-weight: 500;
+    }
+
+    .btn-support {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 0.7rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 0.5rem;
+    }
+
+    .btn-support:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+    }
+
+    .btn-support-outline {
+        background: transparent;
+        border: 2px solid #667eea;
+        color: #667eea;
+        padding: 0.7rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-support-outline:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    /* Contact Form */
+    .contact-form {
+        background: white;
+        border-radius: 24px;
+        padding: 2.5rem;
+        margin-bottom: 4rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .contact-form h2 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-align: center;
+    }
+
+    .contact-form .subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .contact-input {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s;
+        font-family: inherit;
+    }
+
+    .contact-input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* FAQ Section */
+    .faq-section {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-radius: 24px;
+        padding: 3rem;
+    }
+
+    .faq-section h2 {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .faq-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .faq-item {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 1px solid #e2e8f0;
+    }
+
+    .faq-item:hover {
+        border-color: #667eea;
+        box-shadow: 0 5px 15px rgba(102,126,234,0.1);
+    }
+
+    .faq-question {
+        padding: 1.2rem 1.5rem;
+        font-weight: 600;
+        color: #333;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+    }
+
+    .faq-question::after {
+        content: '▼';
+        font-size: 0.8rem;
+        color: #667eea;
+        transition: transform 0.3s;
+    }
+
+    .faq-item.active .faq-question::after {
+        transform: rotate(180deg);
+    }
+
+    .faq-answer {
+        padding: 0 1.5rem;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        color: #666;
+        line-height: 1.6;
+        background: #f8fafc;
+    }
+
+    .faq-item.active .faq-answer {
+        padding: 0 1.5rem 1.2rem;
+        max-height: 300px;
+    }
+
+    /* Status Bar */
+    .status-bar {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border-radius: 16px;
+        padding: 1rem 2rem;
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        color: white;
+    }
+
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .status-dot {
+        width: 10px;
+        height: 10px;
+        background: #10b981;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    .response-time {
+        font-size: 0.9rem;
+        opacity: 0.95;
+    }
+
+    @media (max-width: 768px) {
+        .support-hero h1 {
+            font-size: 1.8rem;
+        }
+        
+        .support-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .faq-section {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<div class="support-hero">
+    <h1>🎧 How Can We Help?</h1>
+    <p>24/7 dedicated support for all your questions and concerns</p>
+</div>
+
+<div class="support-container">
+    <!-- System Status -->
+    <div class="status-bar">
+        <div class="status-indicator">
+            <div class="status-dot"></div>
+            <span>All Systems Operational</span>
+        </div>
+        <div class="response-time">
+            ⚡ Average response time: &lt; 2 minutes for Pro users
+        </div>
+    </div>
+
+    <!-- Support Cards -->
+    <div class="support-grid">
+        <div class="support-card">
+            <div class="support-icon">📚</div>
+            <h3>Documentation</h3>
+            <p>Detailed guides, tutorials, and API documentation to help you get started</p>
+            <button class="btn-support-outline" onclick="window.open('#')">Read Documentation →</button>
+        </div>
+
+        <div class="support-card">
+            <div class="support-icon">💬</div>
+            <h3>Live Chat</h3>
+            <p>Chat with our support team in real-time</p>
+            <p class="email">Available 24/7 for Pro & Enterprise</p>
+            <button class="btn-support" onclick="startChat()">Start Live Chat →</button>
+        </div>
+
+        <div class="support-card">
+            <div class="support-icon">📧</div>
+            <h3>Email Support</h3>
+            <p class="email">support@plagioscan.com</p>
+            <p>Response within 24 hours</p>
+            <button class="btn-support-outline" onclick="sendEmail()">Send Email →</button>
+        </div>
+
+        <div class="support-card">
+            <div class="support-icon">📞</div>
+            <h3>Phone Support</h3>
+            <p class="email">+1 (555) 123-4567</p>
+            <p>Mon-Fri, 9AM-6PM EST (Enterprise only)</p>
+            <button class="btn-support-outline" onclick="makeCall()">Call Now →</button>
+        </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="contact-form">
+        <h2>📝 Send us a message</h2>
+        <p class="subtitle">We'll get back to you within 24 hours</p>
+        <form id="contactForm" onsubmit="sendContactForm(event)">
+            <div class="form-row">
+                <div class="form-group">
+                    <input type="text" id="contactName" placeholder="Your Name" required class="contact-input">
+                </div>
+                <div class="form-group">
+                    <input type="email" id="contactEmail" placeholder="Your Email" required class="contact-input">
+                </div>
+            </div>
+            <div class="form-group">
+                <select id="contactSubject" class="contact-input">
+                    <option value="">Select Subject</option>
+                    <option value="general">💬 General Inquiry</option>
+                    <option value="technical">🔧 Technical Support</option>
+                    <option value="billing">💰 Billing Question</option>
+                    <option value="feature">💡 Feature Request</option>
+                    <option value="partnership">🤝 Partnership Opportunity</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <textarea id="contactMessage" placeholder="Your Message" rows="5" required class="contact-input"></textarea>
+            </div>
+            <button type="submit" class="btn-support" style="width: 100%;">Send Message →</button>
+        </form>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+        <h2>❓ Frequently Asked Questions</h2>
+        <div class="faq-list">
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <div class="faq-question">How accurate is the plagiarism detection?</div>
+                <div class="faq-answer">Our system achieves 99.9% accuracy using multiple algorithms including Cosine Similarity, Jaccard Index, and N-Gram analysis. We continuously improve our algorithms to ensure the highest accuracy.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <div class="faq-question">Is my data secure?</div>
+                <div class="faq-answer">Yes! We use SSL encryption for all connections and never store your files or text after analysis. Files are automatically deleted immediately after processing. Your privacy is our top priority.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <div class="faq-question">Can I cancel my subscription?</div>
+                <div class="faq-answer">Absolutely! You can cancel anytime from your dashboard with no hidden fees. Your subscription will remain active until the end of your billing period.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <div class="faq-question">What file formats are supported?</div>
+                <div class="faq-answer">We support TXT, PDF, DOCX files for direct upload, and images (PNG, JPG, JPEG) with OCR text extraction. More formats coming soon!</div>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <div class="faq-question">Do you offer refunds?</div>
+                <div class="faq-answer">Yes, we offer a 30-day money-back guarantee for all paid plans. If you're not satisfied, contact us for a full refund.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <div class="faq-question">How do I get an API key?</div>
+                <div class="faq-answer">API keys are available for Pro and Enterprise users. Upgrade to Pro from your dashboard, then navigate to API Settings to generate your key.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Toggle FAQ items
+function toggleFAQ(element) {
+    element.classList.toggle('active');
+}
+
+// Support functions
+function startChat() {
+    const user = document.getElementById('userNameDisplay')?.innerText;
+    if (user && user !== '') {
+        alert('💬 Live chat connecting...\n\nOur support team will be with you shortly!');
+    } else {
+        alert('💬 Live chat is available for Pro and Enterprise users.\n\nPlease login or upgrade your plan to access live chat support.');
+    }
+}
+
+function sendEmail() {
+    window.location.href = 'mailto:support@plagioscan.com?subject=Support Request';
+}
+
+function makeCall() {
+    alert('📞 Phone support available Mon-Fri, 9AM-6PM EST\n\nFor Enterprise customers only. Please email for callback scheduling.');
+}
+
+// Contact form submission
+function sendContactForm(event) {
+    event.preventDefault();
+    
+    const name = document.getElementById('contactName').value;
+    const email = document.getElementById('contactEmail').value;
+    const subject = document.getElementById('contactSubject').value;
+    const message = document.getElementById('contactMessage').value;
+    
+    if (!name || !email || !subject || !message) {
+        alert('Please fill all fields');
+        return;
+    }
+    
+    // Here you would typically send to your backend
+    alert(`✅ Thank you ${name}!\n\nYour message has been sent successfully. We'll get back to you within 24 hours.\n\nReference: ${subject} inquiry`);
+    
+    // Clear form
+    document.getElementById('contactName').value = '';
+    document.getElementById('contactEmail').value = '';
+    document.getElementById('contactSubject').value = '';
+    document.getElementById('contactMessage').value = '';
+}
+
+// Auto-expand FAQ based on URL hash
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.hash) {
+        const hash = window.location.hash.substring(1);
+        const faqs = document.querySelectorAll('.faq-item');
+        faqs.forEach(faq => {
+            const question = faq.querySelector('.faq-question').innerText;
+            if (question.toLowerCase().includes(hash.toLowerCase())) {
+                faq.classList.add('active');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

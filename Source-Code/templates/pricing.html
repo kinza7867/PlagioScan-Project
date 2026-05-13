@@ -1,0 +1,530 @@
+{% extends "base.html" %}
+
+{% block title %}Pricing - Choose Your Plan{% endblock %}
+
+{% block content %}
+<style>
+    .pricing-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 4rem 2rem;
+        text-align: center;
+        color: white;
+        margin-bottom: 3rem;
+        border-radius: 0 0 50px 50px;
+    }
+
+    .pricing-hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        animation: fadeInDown 0.8s ease;
+    }
+
+    .pricing-hero p {
+        font-size: 1.2rem;
+        opacity: 0.95;
+        animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .pricing-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem 3rem;
+    }
+
+    /* Pricing Grid */
+    .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+        margin-bottom: 4rem;
+    }
+
+    .pricing-card {
+        background: white;
+        border-radius: 24px;
+        padding: 2rem;
+        text-align: center;
+        position: relative;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .pricing-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(102,126,234,0.2);
+    }
+
+    .pricing-card.popular {
+        border: 2px solid #667eea;
+        transform: scale(1.02);
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    }
+
+    .popular-badge {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.35rem 1.2rem;
+        border-radius: 30px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .pricing-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+        padding: 0.3rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 1rem;
+    }
+
+    .pricing-card.popular .pricing-badge {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+    }
+
+    .pricing-price {
+        font-size: 3rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin: 0.5rem 0;
+    }
+
+    .pricing-period {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .pricing-save {
+        background: #ecfdf5;
+        color: #10b981;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+
+    .pricing-features {
+        list-style: none;
+        margin: 1.5rem 0;
+        text-align: left;
+    }
+
+    .pricing-features li {
+        padding: 0.6rem 0;
+        color: #475569;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .pricing-features li::before {
+        content: '✓';
+        color: #10b981;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+    .btn-pricing, .btn-pricing-primary {
+        width: 100%;
+        padding: 0.9rem;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1rem;
+        margin-top: 1rem;
+    }
+
+    .btn-pricing {
+        background: white;
+        border: 2px solid #667eea;
+        color: #667eea;
+    }
+
+    .btn-pricing:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .btn-pricing-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+    }
+
+    .btn-pricing-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+    }
+
+    .trial-note {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        margin-top: 0.8rem;
+    }
+
+    /* Comparison Table */
+    .comparison-section {
+        background: white;
+        border-radius: 24px;
+        padding: 2rem;
+        margin-bottom: 4rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .comparison-section h2 {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+        padding: 1rem;
+        text-align: center;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .comparison-table th {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        color: white;
+        font-weight: 600;
+    }
+
+    .comparison-table th:first-child {
+        border-radius: 12px 0 0 0;
+        text-align: left;
+    }
+
+    .comparison-table th:last-child {
+        border-radius: 0 12px 0 0;
+    }
+
+    .comparison-table td:first-child {
+        text-align: left;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .comparison-table tr:hover {
+        background: #f8fafc;
+    }
+
+    .check-yes {
+        color: #10b981;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .check-no {
+        color: #ef4444;
+        font-size: 1.2rem;
+    }
+
+    /* FAQ Section */
+    .faq-section {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-radius: 24px;
+        padding: 3rem;
+        margin-top: 2rem;
+    }
+
+    .faq-section h2 {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .faq-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+
+    .faq-item {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+    .faq-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .faq-item h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .faq-item h3::before {
+        content: '❓';
+        font-size: 1.2rem;
+    }
+
+    .faq-item p {
+        color: #666;
+        line-height: 1.5;
+        font-size: 0.9rem;
+    }
+
+    /* Guarantee Section */
+    .guarantee-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 24px;
+        padding: 3rem;
+        text-align: center;
+        color: white;
+        margin-top: 3rem;
+    }
+
+    .guarantee-section h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .guarantee-section p {
+        opacity: 0.95;
+        margin-bottom: 1.5rem;
+    }
+
+    .guarantee-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .pricing-hero h1 {
+            font-size: 1.8rem;
+        }
+        
+        .pricing-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .pricing-card.popular {
+            transform: scale(1);
+        }
+        
+        .faq-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .guarantee-section {
+            padding: 2rem;
+        }
+    }
+</style>
+
+<div class="pricing-hero">
+    <h1>💰 Simple, Transparent Pricing</h1>
+    <p>Choose the plan that works best for you. No hidden fees.</p>
+</div>
+
+<div class="pricing-container">
+    <!-- Pricing Cards -->
+    <div class="pricing-grid">
+        <!-- Free Plan -->
+        <div class="pricing-card">
+            <div class="pricing-badge">Free</div>
+            <div class="pricing-price">$0</div>
+            <div class="pricing-period">forever</div>
+            <ul class="pricing-features">
+                <li>5 checks per day</li>
+                <li>Basic similarity analysis</li>
+                <li>Word count statistics</li>
+                <li>Common words detection</li>
+                <li>Basic readability score</li>
+                <li style="color: #cbd5e1;">File upload (PDF/DOCX)</li>
+                <li style="color: #cbd5e1;">OCR image scanning</li>
+                <li style="color: #cbd5e1;">Detailed reports</li>
+                <li style="color: #cbd5e1;">API access</li>
+                <li style="color: #cbd5e1;">Priority support</li>
+            </ul>
+            <button class="btn-pricing" onclick="openModal('signup')">Get Started →</button>
+        </div>
+
+        <!-- Pro Plan (Most Popular) -->
+        <div class="pricing-card popular">
+            <div class="popular-badge">🔥 Most Popular</div>
+            <div class="pricing-badge">Pro</div>
+            <div class="pricing-price">$19</div>
+            <div class="pricing-period">per month</div>
+            <div class="pricing-save">💡 Save 20% with annual billing ($182/year)</div>
+            <ul class="pricing-features">
+                <li>Unlimited checks</li>
+                <li>Advanced multi-metric analysis</li>
+                <li>File upload (PDF, DOCX, TXT)</li>
+                <li>OCR image scanning</li>
+                <li>Detailed PDF reports</li>
+                <li>Smart suggestions</li>
+                <li>Advanced readability metrics</li>
+                <li>API access (1,000 req/day)</li>
+                <li>Priority email support</li>
+                <li>Export results</li>
+            </ul>
+            <button class="btn-pricing-primary" onclick="openModal('signup')">Start Free Trial →</button>
+            <div class="trial-note">✨ 14-day free trial, no credit card required</div>
+        </div>
+
+        <!-- Enterprise Plan -->
+        <div class="pricing-card">
+            <div class="pricing-badge">Enterprise</div>
+            <div class="pricing-price">Custom</div>
+            <div class="pricing-period">contact us</div>
+            <ul class="pricing-features">
+                <li>Everything in Pro</li>
+                <li>Unlimited API calls</li>
+                <li>Dedicated support team</li>
+                <li>Custom integrations</li>
+                <li>On-premise deployment</li>
+                <li>SLA agreement</li>
+                <li>Team management</li>
+                <li>Custom reporting</li>
+                <li>Training & onboarding</li>
+                <li>White-label options</li>
+            </ul>
+            <button class="btn-pricing" onclick="location.href='/support'">Contact Sales →</button>
+        </div>
+    </div>
+
+    <!-- Feature Comparison Table -->
+    <div class="comparison-section">
+        <h2>📊 Feature Comparison</h2>
+        <div class="table-container">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Free</th>
+                        <th>Pro</th>
+                        <th>Enterprise</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Daily Checks</td><td>5/day</td><td class="check-yes">Unlimited</td><td class="check-yes">Unlimited</td></tr>
+                    <tr><td>Multi-Metric Analysis</td><td class="check-yes">✓</td><td class="check-yes">✓</td><td class="check-yes">✓</td></tr>
+                    <tr><td>File Upload (PDF/DOCX)</td><td class="check-yes">✓</td><td class="check-yes">✓</td><td class="check-yes">✓</td></tr>
+                    <tr><td>OCR Image Scanning</td><td class="check-no">✗</td><td class="check-yes">✓</td><td class="check-yes">✓</td></tr>
+                    <tr><td>Detailed Reports</td><td>Basic</td><td class="check-yes">Advanced</td><td class="check-yes">Enterprise</td></tr>
+                    <tr><td>API Access</td><td class="check-no">✗</td><td>1,000/day</td><td class="check-yes">Unlimited</td></tr>
+                    <tr><td>Priority Support</td><td class="check-no">✗</td><td class="check-yes">✓</td><td class="check-yes">24/7 Dedicated</td></tr>
+                    <tr><td>Custom Integrations</td><td class="check-no">✗</td><td class="check-no">✗</td><td class="check-yes">✓</td></tr>
+                    <tr><td>SLA Agreement</td><td class="check-no">✗</td><td class="check-no">✗</td><td class="check-yes">✓</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+        <h2>❓ Frequently Asked Questions</h2>
+        <div class="faq-grid">
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <h3>Can I cancel anytime?</h3>
+                <p>Yes, you can cancel your subscription at any time from your dashboard. No hidden fees or penalties.</p>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <h3>What payment methods do you accept?</h3>
+                <p>We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and bank transfers for enterprise plans.</p>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <h3>Is there a free trial?</h3>
+                <p>Yes, the Pro plan comes with a 14-day free trial. No credit card required to start your trial.</p>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <h3>Can I upgrade or downgrade?</h3>
+                <p>Yes, you can change your plan at any time from your dashboard. Upgrades take effect immediately.</p>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <h3>Do you offer student discounts?</h3>
+                <p>Yes! Students get 50% off the Pro plan. Contact us with your student email for verification.</p>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <h3>Is my data secure?</h3>
+                <p>Absolutely! We use SSL encryption and never store your files after analysis. Your privacy is our priority.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Money Back Guarantee -->
+    <div class="guarantee-section">
+        <div class="guarantee-icon">💯</div>
+        <h3>30-Day Money-Back Guarantee</h3>
+        <p>Not completely satisfied? Get a full refund within 30 days of your purchase. No questions asked.</p>
+        <button class="btn-pricing-primary" onclick="openModal('signup')" style="background: white; color: #667eea;">Get Started Today →</button>
+    </div>
+</div>
+
+<script>
+function toggleFAQ(element) {
+    element.classList.toggle('active');
+}
+</script>
+{% endblock %}

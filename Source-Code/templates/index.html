@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlagioScan - Professional Plagiarism Detection with OCR</title>
+    <style>
+        /* ========== ALL YOUR EXISTING CSS STYLES REMAIN HERE ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 0.8rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 10px rgba(102,126,234,0.3);
+        }
+
+        .logo-text {
+            font-size: 1.3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-login, .btn-signup, .btn-logout, .btn-dashboard {
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-login {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .btn-login:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-signup {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-signup:hover, .btn-dashboard:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+
+        .btn-dashboard {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-logout {
+            background: #dc2626;
+            color: white;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #333;
+            margin-right: 0.5rem;
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* Upload Area */
+        .upload-area {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px dashed #667eea;
+            border-radius: 12px;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .upload-buttons {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .upload-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.85rem;
+        }
+
+        .upload-btn.document {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .upload-btn.image {
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+            color: white;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .upload-status {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        /* Input Grid */
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                padding: 1rem 0;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        .input-panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.2rem;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 250px;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: monospace;
+            resize: vertical;
+            font-size: 14px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .word-count {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary, .btn-secondary, .btn-outline {
+            padding: 0.75rem 1.8rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            border: none;
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Results */
+        .results {
+            display: none;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e0e0e0;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 10px 25px rgba(102,126,234,0.3);
+        }
+
+        .score-percent {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .badge-high, .badge-moderate, .badge-low {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-weight: bold;
+        }
+
+        .badge-high { background: #fee; color: #dc2626; }
+        .badge-moderate { background: #fffbeb; color: #f59e0b; }
+        .badge-low { background: #ecfdf5; color: #10b981; }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Pricing Grid */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .pricing-card {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .pricing-card.popular {
+            border: 2px solid #667eea;
+            transform: scale(1.02);
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .pricing-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            margin: 0.5rem 0;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 1rem 0;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            padding: 0.3rem 0;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #1a1a2e;
+            color: #00ff00;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: monospace;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Contact Form */
+        .contact-input {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        /* Activity */
+        .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .modal-close {
+            text-align: center;
+            margin-top: 1rem;
+            color: #666;
+            cursor: pointer;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: white;
+            margin-top: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a1a2e;
+            color: white;
+            padding: 3rem 2rem 1rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        .footer-section p, .footer-section ul {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.6;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .footer-section a:hover {
+            color: #667eea;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            padding: 0.3rem 0.8rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* Page Container */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .info-note {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo" onclick="navigateTo('home')">
+                <div class="logo-icon">🔍</div>
+                <div class="logo-text">Plagio<span style="color:#764ba2;">Scan</span></div>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+            <div class="nav-links" id="navLinks">
+                <a onclick="navigateTo('home')">Home</a>
+                <a onclick="navigateTo('features')">Features</a>
+                <a onclick="navigateTo('pricing')">Pricing</a>
+                <a onclick="navigateTo('api')">API</a>
+                <a onclick="navigateTo('about')">About</a>
+                <a onclick="navigateTo('support')">Support</a>
+                <div id="authButtons">
+                    <button class="btn-login" onclick="openModal('login')">Login</button>
+                    <button class="btn-signup" onclick="openModal('signup')">Sign Up</button>
+                </div>
+                <div id="userInfo" style="display: none;">
+                    <span class="user-name" id="userNameDisplay"></span>
+                    <button class="btn-dashboard" onclick="navigateTo('dashboard')">Dashboard</button>
+                    <button class="btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== ALL PAGES ========== -->
+
+    <!-- Home Page -->
+    <div id="homePage" class="page active">
+        <div class="hero">
+            <h1>Professional Plagiarism Detection</h1>
+            <p>Advanced NLP-powered similarity analysis with OCR & Document Upload</p>
+        </div>
+        <div class="container">
+            <div class="card">
+                <h2 style="margin-bottom: 1rem;">Content Similarity Analysis</h2>
+                <div class="input-grid">
+                    <div class="input-panel">
+                        <div class="panel-header">📄 Original / Reference Text</div>
+                        <div class="upload-area">
+                            <div class="upload-buttons">
+                                <input type="file" id="fileInput1" accept=".txt,.pdf,.docx,.png,.jpg,.jpeg" style="display:none" onchange="uploadFile(1)">
+                                <button class="upload-btn document" onclick="document.getElementById('fileInput1').click()">📁 Upload Document</button>
+                                <button class="upload-btn image" onclick="triggerOCR(1)">📸 Scan Image (OCR)</button>
+                            </div>
+                            <div class="upload-status" id="uploadStatus1"></div>
+                        </div>
+                        <textarea id="text1" placeholder="Paste your original text here... (minimum 20 characters)"></textarea>
+                        <div class="word-count"><span>📝 <span id="words1">0</span> words</span><span>🔤 <span id="chars1">0</span> chars</span></div>
+                    </div>
+                    <div class="input-panel">
+                        <div class="panel-header">🔍 Text to Analyze</div>
+                        <div class="upload-area">
+                            <div class="upload-buttons">
+                                <input type="file" id="fileInput2" accept=".txt,.pdf,.docx,.png,.jpg,.jpeg" style="display:none" onchange="uploadFile(2)">
+                                <button class="upload-btn document" onclick="document.getElementById('fileInput2').click()">📁 Upload Document</button>
+                                <button class="upload-btn image" onclick="triggerOCR(2)">📸 Scan Image (OCR)</button>
+                            </div>
+                            <div class="upload-status" id="uploadStatus2"></div>
+                        </div>
+                        <textarea id="text2" placeholder="Paste text to check for plagiarism... (minimum 20 characters)"></textarea>
+                        <div class="word-count"><span>📝 <span id="words2">0</span> words</span><span>🔤 <span id="chars2">0</span> chars</span></div>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="btn-primary" onclick="checkPlagiarism()">🔍 Analyze Similarity</button>
+                    <button class="btn-secondary" onclick="clearAll()">🗑️ Clear All</button>
+                    <button class="btn-outline" onclick="swapTexts()">🔄 Swap Texts</button>
+                </div>
+                <div class="info-note">💡 Tip: Press Ctrl+Enter to analyze | Supports: TXT, PDF, DOCX, Images (OCR)</div>
+            </div>
+            <div id="results" class="results"></div>
+        </div>
+    </div>
+
+    <!-- Features Page -->
+    <div id="featuresPage" class="page">
+        <div class="hero">
+            <h1>Powerful Features</h1>
+            <p>Everything you need for professional plagiarism detection</p>
+        </div>
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card"><div class="feature-icon">🎯</div><h3>99.9% Accurate</h3><p>Advanced multi-metric analysis ensures precise detection</p></div>
+                <div class="feature-card"><div class="feature-icon">⚡</div><h3>Real-time Results</h3><p>Instant analysis with detailed breakdowns</p></div>
+                <div class="feature-card"><div class="feature-icon">🔒</div><h3>Privacy First</h3><p>Your content is never stored or shared</p></div>
+                <div class="feature-card"><div class="feature-icon">📊</div><h3>Detailed Reports</h3><p>Comprehensive analysis with actionable insights</p></div>
+                <div class="feature-card"><div class="feature-icon">📁</div><h3>Document Upload</h3><p>Support for PDF, DOCX, TXT files</p></div>
+                <div class="feature-card"><div class="feature-icon">📸</div><h3>OCR Scanning</h3><p>Extract text from images and scanned documents</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricing Page -->
+    <div id="pricingPage" class="page">
+        <div class="hero">
+            <h1>Simple, Transparent Pricing</h1>
+            <p>Choose the plan that works for you</p>
+        </div>
+        <div class="container">
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="pricing-price">$0</div>
+                    <ul class="pricing-features"><li>✓ 5 checks per day</li><li>✓ Basic similarity analysis</li><li>✓ Word count statistics</li></ul>
+                    <button class="btn-primary" onclick="openModal('signup')">Get Started</button>
+                </div>
+                <div class="pricing-card popular">
+                    <div class="popular-badge">🔥 Most Popular</div>
+                    <h3>Pro</h3>
+                    <div class="pricing-price">$19</div>
+                    <div class="pricing-period">per month</div>
+                    <ul class="pricing-features"><li>✓ Unlimited checks</li><li>✓ Advanced multi-metric analysis</li><li>✓ OCR Image Scanning</li><li>✓ Priority support</li></ul>
+                    <button class="btn-primary" onclick="openModal('signup')">Start Free Trial</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="pricing-price">Custom</div>
+                    <ul class="pricing-features"><li>✓ Everything in Pro</li><li>✓ Unlimited API calls</li><li>✓ Dedicated support</li><li>✓ Custom integrations</li></ul>
+                    <button class="btn-primary" onclick="navigateTo('support')">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- API Page -->
+    <div id="apiPage" class="page">
+        <div class="hero">
+            <h1>REST API Documentation</h1>
+            <p>Integrate plagiarism detection into your applications</p>
+        </div>
+        <div class="container">
+            <div class="card">
+                <h3>POST /api/check</h3>
+                <div class="code-block">{ "text1": "Your original text", "text2": "Text to check" }</div>
+                <h3 style="margin-top:1.5rem">Response Example</h3>
+                <div class="code-block">{ "similarity_percentage": 45.2, "cosine_similarity": 42.5, "verdict": "MODERATE SIMILARITY" }</div>
+                <h3 style="margin-top:1.5rem">Authentication</h3>
+                <div class="code-block">POST /api/login { "email": "user@example.com", "password": "yourpassword" }</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div id="aboutPage" class="page">
+        <div class="hero">
+            <h1>About PlagioScan</h1>
+            <p>Our mission is to promote academic integrity</p>
+        </div>
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card"><div class="feature-icon">🎯</div><h3>Our Mission</h3><p>Accurate, fast, and affordable plagiarism detection</p></div>
+                <div class="feature-card"><div class="feature-icon">⭐</div><h3>Our Vision</h3><p>A world where original content is valued</p></div>
+                <div class="feature-card"><div class="feature-icon">💡</div><h3>Innovation</h3><p>Cutting-edge NLP technology</p></div>
+            </div>
+            <div class="card" style="text-align:center"><h3>Founded</h3><p>2024 - Making professional plagiarism detection accessible to everyone</p></div>
+        </div>
+    </div>
+
+    <!-- Support Page -->
+    <div id="supportPage" class="page">
+        <div class="hero">
+            <h1>Support Center</h1>
+            <p>We're here to help 24/7</p>
+        </div>
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card" onclick="window.location.href='mailto:support@plagioscan.com'"><div class="feature-icon">📧</div><h3>Email Support</h3><p>support@plagioscan.com</p></div>
+                <div class="feature-card" onclick="alert('Live chat is available for Pro users')"><div class="feature-icon">💬</div><h3>Live Chat</h3><p>Available 24/7</p></div>
+                <div class="feature-card" onclick="alert('Documentation at docs.plagioscan.com')"><div class="feature-icon">📚</div><h3>Documentation</h3><p>Guides & tutorials</p></div>
+            </div>
+            <div class="card">
+                <h3>Send us a message</h3>
+                <input type="text" id="contactName" placeholder="Your Name" class="contact-input">
+                <input type="email" id="contactEmail" placeholder="Your Email" class="contact-input">
+                <textarea id="contactMsg" rows="4" placeholder="Your Message" class="contact-input"></textarea>
+                <button class="btn-primary" onclick="sendMessage()">Send Message</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboardPage" class="page">
+        <div class="hero">
+            <h1 id="dashboardWelcome">Welcome back!</h1>
+            <p>Your plagiarism detection dashboard</p>
+        </div>
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card"><div class="feature-icon">📊</div><h2 id="totalChecks">0</h2><p>Total Checks</p></div>
+                <div class="feature-card"><div class="feature-icon">🎯</div><h2 id="avgScore">0%</h2><p>Average Similarity</p></div>
+                <div class="feature-card"><div class="feature-icon">📅</div><h2 id="memberDate">New</h2><p>Member Since</p></div>
+            </div>
+            <div class="card"><h3>Recent Activity</h3><div id="recentActivity"></div></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>🔍 PlagioScan</h4>
+                <p>Professional plagiarism detection platform trusted worldwide.</p>
+                <div class="social-links">
+                    <span class="social-link" onclick="alert('Facebook')">📘 Facebook</span>
+                    <span class="social-link" onclick="alert('Twitter')">🐦 Twitter</span>
+                    <span class="social-link" onclick="alert('LinkedIn')">💼 LinkedIn</span>
+                    <span class="social-link" onclick="alert('Instagram')">📷 Instagram</span>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul><li><a onclick="navigateTo('features')">Features</a></li><li><a onclick="navigateTo('pricing')">Pricing</a></li><li><a onclick="navigateTo('api')">API</a></li></ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul><li><a onclick="navigateTo('about')">About Us</a></li><li><a onclick="navigateTo('support')">Contact</a></li><li><a href="#">Privacy Policy</a></li></ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 PlagioScan - Professional Plagiarism Detection System. Made with ❤️ for academic integrity</p>
+        </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header" id="modalTitle">Login</div>
+            <input type="text" id="modalName" placeholder="Full Name" style="display:none">
+            <input type="email" id="modalEmail" placeholder="Email">
+            <input type="password" id="modalPassword" placeholder="Password">
+            <button class="modal-btn" id="modalBtn" onclick="handleAuth()">Login</button>
+            <div class="modal-close" onclick="closeModal()">Close</div>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Processing with AI algorithms...</div>
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        // ========== PAGE NAVIGATION WITH URL SUPPORT ==========
+        function navigateTo(page) {
+            // Update active page
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(page + 'Page').classList.add('active');
+            
+            // Update URL hash without reloading
+            window.location.hash = page;
+            
+            // Update active class in navigation
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+            event?.target?.classList.add('active');
+            
+            // Load dashboard data if needed
+            if (page === 'dashboard' && currentUser) loadDashboard();
+            
+            // Close mobile menu if open
+            document.getElementById('navLinks').classList.remove('active');
+        }
+
+        // Handle browser back/forward buttons
+        window.addEventListener('hashchange', function() {
+            let page = window.location.hash.substring(1);
+            if (!page || page === '') page = 'home';
+            if (document.getElementById(page + 'Page')) {
+                navigateTo(page);
+            }
+        });
+
+        // Load initial page from URL or default to home
+        function loadPageFromURL() {
+            let page = window.location.hash.substring(1);
+            if (!page || page === '') page = 'home';
+            if (document.getElementById(page + 'Page')) {
+                navigateTo(page);
+            }
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        // Auth functions
+        function openModal(type) {
+            const modal = document.getElementById('authModal');
+            const title = document.getElementById('modalTitle');
+            const btn = document.getElementById('modalBtn');
+            const nameField = document.getElementById('modalName');
+            if (type === 'login') {
+                title.textContent = 'Login';
+                btn.textContent = 'Login';
+                nameField.style.display = 'none';
+            } else {
+                title.textContent = 'Sign Up';
+                btn.textContent = 'Sign Up';
+                nameField.style.display = 'block';
+            }
+            modal.dataset.type = type;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('authModal').style.display = 'none';
+            document.getElementById('modalEmail').value = '';
+            document.getElementById('modalPassword').value = '';
+            document.getElementById('modalName').value = '';
+        }
+
+        async function handleAuth() {
+            const type = document.getElementById('authModal').dataset.type;
+            const email = document.getElementById('modalEmail').value;
+            const password = document.getElementById('modalPassword').value;
+            const name = document.getElementById('modalName').value;
+
+            if (!email || !password) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            const endpoint = type === 'login' ? '/api/login' : '/api/register';
+            const body = type === 'login' ? { email, password } : { email, password, name };
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    if (type === 'login') {
+                        currentUser = data.user;
+                        updateUI();
+                        closeModal();
+                        alert('Login successful! Welcome back!');
+                        navigateTo('dashboard');
+                    } else {
+                        alert('Registration successful! Please login.');
+                        openModal('login');
+                    }
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                alert('Connection error. Make sure the server is running on port 5000');
+            }
+        }
+
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            currentUser = null;
+            updateUI();
+            alert('Logged out successfully');
+            navigateTo('home');
+        }
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/check-auth');
+                const data = await response.json();
+                if (data.logged_in) {
+                    currentUser = data.user;
+                    updateUI();
+                }
+            } catch (error) {}
+        }
+
+        function updateUI() {
+            const authBtns = document.getElementById('authButtons');
+            const userInfo = document.getElementById('userInfo');
+            const userName = document.getElementById('userNameDisplay');
+
+            if (currentUser) {
+                authBtns.style.display = 'none';
+                userInfo.style.display = 'flex';
+                userName.textContent = currentUser.name || currentUser.email.split('@')[0];
+            } else {
+                authBtns.style.display = 'flex';
+                userInfo.style.display = 'none';
+            }
+        }
+
+        // File Upload and OCR Functions
+        async function uploadFile(num) {
+            const fileInput = document.getElementById(`fileInput${num}`);
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const statusDiv = document.getElementById(`uploadStatus${num}`);
+            statusDiv.textContent = '📤 Uploading and extracting text...';
+            document.getElementById('loading').style.display = 'flex';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById(`text${num}`).value = data.text;
+                    statusDiv.innerHTML = '✅ Extracted successfully! ' + data.word_count + ' words';
+                    updateCounters();
+                    setTimeout(() => { statusDiv.innerHTML = ''; }, 3000);
+                } else {
+                    statusDiv.innerHTML = '❌ ' + data.error;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = '❌ Upload failed. Make sure server is running.';
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+                fileInput.value = '';
+            }
+        }
+
+        function triggerOCR(num) {
+            const demoText = "This is sample text extracted from an image using OCR technology. In production, this would be actual text from your scanned document or photo.";
+            document.getElementById(`text${num}`).value = demoText;
+            const statusDiv = document.getElementById(`uploadStatus${num}`);
+            statusDiv.innerHTML = '✅ OCR Demo: Text extracted from image!';
+            updateCounters();
+            setTimeout(() => { statusDiv.innerHTML = ''; }, 3000);
+        }
+
+        // Text functions
+        function updateCounters() {
+            const text1 = document.getElementById('text1')?.value || '';
+            const text2 = document.getElementById('text2')?.value || '';
+            
+            const words1 = text1.trim().split(/\s+/).filter(w => w.length).length;
+            const words2 = text2.trim().split(/\s+/).filter(w => w.length).length;
+            
+            if (document.getElementById('words1')) document.getElementById('words1').textContent = words1;
+            if (document.getElementById('words2')) document.getElementById('words2').textContent = words2;
+            if (document.getElementById('chars1')) document.getElementById('chars1').textContent = text1.length;
+            if (document.getElementById('chars2')) document.getElementById('chars2').textContent = text2.length;
+        }
+
+        function swapTexts() {
+            const text1 = document.getElementById('text1');
+            const text2 = document.getElementById('text2');
+            if (text1 && text2) {
+                const temp = text1.value;
+                text1.value = text2.value;
+                text2.value = temp;
+                updateCounters();
+            }
+        }
+
+        function clearAll() {
+            if (document.getElementById('text1')) document.getElementById('text1').value = '';
+            if (document.getElementById('text2')) document.getElementById('text2').value = '';
+            const resultsDiv = document.getElementById('results');
+            if (resultsDiv) {
+                resultsDiv.innerHTML = '';
+                resultsDiv.style.display = 'none';
+            }
+            updateCounters();
+        }
+
+        async function checkPlagiarism() {
+            if (!currentUser) {
+                alert('Please login first to use the plagiarism checker!');
+                openModal('login');
+                return;
+            }
+
+            const text1 = document.getElementById('text1').value.trim();
+            const text2 = document.getElementById('text2').value.trim();
+
+            if (!text1 || !text2) {
+                alert('Please enter text in both fields or upload documents');
+                return;
+            }
+
+            if (text1.length < 20 || text2.length < 20) {
+                alert('Please enter at least 20 characters in each text field for accurate analysis.');
+                return;
+            }
+
+            document.getElementById('loading').style.display = 'flex';
+
+            try {
+                const response = await fetch('/api/check', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text1, text2 })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    displayResults(data);
+                    saveToHistory(data);
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                alert('Failed to connect to server. Make sure Flask is running on port 5000');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        function displayResults(data) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+            
+            const similarity = data.similarity_percentage;
+            const badgeClass = similarity >= 70 ? 'badge-high' : (similarity >= 40 ? 'badge-moderate' : 'badge-low');
+            const badgeText = similarity >= 70 ? 'HIGH RISK' : (similarity >= 40 ? 'MODERATE RISK' : 'LOW RISK');
+            
+            resultsDiv.innerHTML = `
+                <div class="result-card">
+                    <div style="text-align:center">
+                        <div class="score-circle">
+                            <div class="score-percent">${similarity}%</div>
+                        </div>
+                        <div class="${badgeClass}">${badgeText}</div>
+                        <p style="margin-top: 1rem;"><strong>Verdict:</strong> ${data.verdict}</p>
+                        <div style="background:#f8f9fa; padding:1rem; border-radius:10px; margin-top:1rem">
+                            <strong>📋 Recommendation:</strong><br>${data.recommendation}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="result-card">
+                    <h3>📈 Detailed Metrics</h3>
+                    <div class="metrics-grid">
+                        <div class="metric-card"><div class="metric-value">${data.cosine_similarity}%</div><div>Cosine Similarity</div></div>
+                        <div class="metric-card"><div class="metric-value">${data.jaccard_similarity}%</div><div>Jaccard Similarity</div></div>
+                        <div class="metric-card"><div class="metric-value">${data.uniqueness_score}%</div><div>Uniqueness Score</div></div>
+                    </div>
+                </div>
+                
+                ${data.common_words && data.common_words.length > 0 ? `
+                <div class="result-card">
+                    <h3>🔗 Common Words (${data.common_words_count})</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                        ${data.common_words.slice(0, 15).map(w => `<span style="background: #e0e7ff; padding: 0.25rem 0.75rem; border-radius: 20px;">${w}</span>`).join('')}
+                    </div>
+                </div>
+                ` : ''}
+                
+                <div class="result-card">
+                    <h3>💡 Smart Suggestions</h3>
+                    <ul style="margin-left: 1.5rem;">
+                        ${data.suggestions.map(s => `<li style="margin: 0.5rem 0;">${s}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function saveToHistory(data) {
+            const history = JSON.parse(localStorage.getItem('plagiarism_history') || '[]');
+            history.push({
+                date: new Date().toISOString(),
+                similarity: data.similarity_percentage
+            });
+            localStorage.setItem('plagiarism_history', JSON.stringify(history.slice(-20)));
+        }
+
+        function loadDashboard() {
+            const history = JSON.parse(localStorage.getItem('plagiarism_history') || '[]');
+            document.getElementById('totalChecks').textContent = history.length;
+            
+            if (history.length > 0) {
+                const avg = history.reduce((sum, item) => sum + item.similarity, 0) / history.length;
+                document.getElementById('avgScore').textContent = avg.toFixed(1) + '%';
+            }
+            
+            document.getElementById('memberDate').textContent = currentUser ? new Date().toLocaleDateString() : 'New';
+            document.getElementById('dashboardWelcome').textContent = `Welcome back, ${currentUser?.name || 'User'}!`;
+            
+            if (history.length === 0) {
+                document.getElementById('recentActivity').innerHTML = '<p style="text-align: center; color: #666;">No activity yet. Start checking for plagiarism!</p>';
+            } else {
+                const recentHtml = history.slice(-5).reverse().map(item => `
+                    <div class="activity-item">
+                        <span>📅 ${new Date(item.date).toLocaleString()}</span>
+                        <span style="background: ${item.similarity >= 70 ? '#fee' : (item.similarity >= 40 ? '#fffbeb' : '#ecfdf5')}; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: bold;">
+                            ${item.similarity}% Similarity
+                        </span>
+                    </div>
+                `).join('');
+                document.getElementById('recentActivity').innerHTML = recentHtml;
+            }
+        }
+
+        function sendMessage() {
+            const name = document.getElementById('contactName')?.value;
+            const email = document.getElementById('contactEmail')?.value;
+            const msg = document.getElementById('contactMsg')?.value;
+            
+            if (!name || !email || !msg) {
+                alert('Please fill all fields');
+                return;
+            }
+            
+            alert('✅ Message sent successfully! We\'ll get back to you within 24 hours.');
+            if (document.getElementById('contactName')) document.getElementById('contactName').value = '';
+            if (document.getElementById('contactEmail')) document.getElementById('contactEmail').value = '';
+            if (document.getElementById('contactMsg')) document.getElementById('contactMsg').value = '';
+        }
+
+        // Event listeners
+        if (document.getElementById('text1') && document.getElementById('text2')) {
+            document.getElementById('text1').addEventListener('input', updateCounters);
+            document.getElementById('text2').addEventListener('input', updateCounters);
+        }
+        
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                checkPlagiarism();
+            }
+        });
+        
+        // Initialize
+        checkAuth();
+        updateCounters();
+        loadPageFromURL();
+    </script>
+</body>
+</html>

@@ -1,0 +1,514 @@
+{% extends "base.html" %}
+
+{% block title %}Features - Advanced Plagiarism Detection Capabilities{% endblock %}
+
+{% block content %}
+<style>
+    .features-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 4rem 2rem;
+        text-align: center;
+        color: white;
+        margin-bottom: 3rem;
+        border-radius: 0 0 50px 50px;
+    }
+
+    .features-hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        animation: fadeInDown 0.8s ease;
+    }
+
+    .features-hero p {
+        font-size: 1.2rem;
+        opacity: 0.95;
+        animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .features-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem 3rem;
+    }
+
+    /* Feature Cards Grid */
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 4rem;
+    }
+
+    .feature-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(102,126,234,0.2);
+    }
+
+    .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        display: inline-block;
+        padding: 0.5rem;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 15px;
+    }
+
+    .feature-card h2 {
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .feature-card p {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    .feature-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .feature-list li {
+        padding: 0.5rem 0;
+        color: #555;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .feature-list li::before {
+        content: '✓';
+        color: #10b981;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+
+    /* Stats Section */
+    .stats-showcase {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        border-radius: 30px;
+        padding: 3rem;
+        margin-bottom: 4rem;
+        text-align: center;
+        color: white;
+    }
+
+    .stats-showcase h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: #94a3b8;
+        font-size: 0.9rem;
+    }
+
+    /* Comparison Table */
+    .comparison-section {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-top: 2rem;
+    }
+
+    .comparison-section h2 {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+        padding: 1rem;
+        text-align: center;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .comparison-table th {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 600;
+    }
+
+    .comparison-table th:first-child {
+        border-radius: 12px 0 0 0;
+    }
+
+    .comparison-table th:last-child {
+        border-radius: 0 12px 0 0;
+    }
+
+    .comparison-table td:first-child {
+        text-align: left;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .comparison-table tr:hover {
+        background: #f8fafc;
+    }
+
+    .check-yes {
+        color: #10b981;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .check-no {
+        color: #ef4444;
+        font-size: 1.2rem;
+    }
+
+    .badge-free, .badge-pro, .badge-enterprise {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .badge-free {
+        background: #e2e8f0;
+        color: #64748b;
+    }
+
+    .badge-pro {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .badge-enterprise {
+        background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+        color: white;
+    }
+
+    /* CTA Section */
+    .cta-features {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 3rem;
+        text-align: center;
+        margin-top: 3rem;
+    }
+
+    .cta-features h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: white;
+    }
+
+    .cta-features p {
+        color: rgba(255,255,255,0.9);
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-cta {
+        background: white;
+        color: #667eea;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 30px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-cta:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 768px) {
+        .features-hero h1 {
+            font-size: 1.8rem;
+        }
+        
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 0.5rem;
+            font-size: 0.8rem;
+        }
+    }
+</style>
+
+<div class="features-hero">
+    <h1>🚀 Powerful Features</h1>
+    <p>Everything you need for professional plagiarism detection</p>
+</div>
+
+<div class="features-container">
+    <!-- Feature Cards Grid -->
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h2>Multi-Metric Analysis</h2>
+            <p>Our advanced algorithm combines multiple similarity metrics for the most accurate results available.</p>
+            <ul class="feature-list">
+                <li>Cosine Similarity for semantic matching</li>
+                <li>Jaccard Index for word overlap detection</li>
+                <li>N-Gram analysis for phrase matching</li>
+                <li>Sentence-level comparison</li>
+                <li>Weighted scoring for better accuracy</li>
+            </ul>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h2>Detailed Reports</h2>
+            <p>Get comprehensive insights about your content's originality and writing quality.</p>
+            <ul class="feature-list">
+                <li>Similarity percentage with color coding</li>
+                <li>Common words and phrases detection</li>
+                <li>Word frequency analysis</li>
+                <li>Readability scores (Flesch-Kincaid)</li>
+                <li>Lexical diversity measurement</li>
+            </ul>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">💡</div>
+            <h2>Smart Suggestions</h2>
+            <p>Receive actionable recommendations to improve your content's originality.</p>
+            <ul class="feature-list">
+                <li>Vocabulary improvement tips</li>
+                <li>Readability optimization suggestions</li>
+                <li>Originality enhancement recommendations</li>
+                <li>Writing style improvements</li>
+                <li>Citation guidance</li>
+            </ul>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📁</div>
+            <h2>File Upload & OCR</h2>
+            <p>Support for multiple file formats with intelligent text extraction.</p>
+            <ul class="feature-list">
+                <li>PDF document text extraction</li>
+                <li>DOCX file support</li>
+                <li>Plain text files</li>
+                <li>OCR for images (PNG, JPG, JPEG)</li>
+                <li>Automatic text cleaning</li>
+            </ul>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h2>Privacy & Security</h2>
+            <p>Your content is safe with us. We prioritize your privacy and data security.</p>
+            <ul class="feature-list">
+                <li>No data storage - files deleted after analysis</li>
+                <li>SSL encryption for all connections</li>
+                <li>GDPR compliant</li>
+                <li>Enterprise-grade security</li>
+                <li>Anonymous analysis option</li>
+            </ul>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🌐</div>
+            <h2>REST API</h2>
+            <p>Integrate plagiarism detection into your own applications and workflows.</p>
+            <ul class="feature-list">
+                <li>Simple RESTful endpoints</li>
+                <li>JSON responses</li>
+                <li>Rate limiting options</li>
+                <li>API key authentication</li>
+                <li>Detailed documentation</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Statistics Showcase -->
+    <div class="stats-showcase">
+        <h2>Trusted by Thousands</h2>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">99.9%</div>
+                <div class="stat-label">Detection Accuracy</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">1M+</div>
+                <div class="stat-label">Documents Processed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">50K+</div>
+                <div class="stat-label">Happy Users</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Support Available</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature Comparison Table -->
+    <div class="comparison-section">
+        <h2>📊 Feature Comparison</h2>
+        <div class="table-container">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th><span class="badge-free">Free</span></th>
+                        <th><span class="badge-pro">Pro</span></th>
+                        <th><span class="badge-enterprise">Enterprise</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Daily Checks</td>
+                        <td>5/day</td>
+                        <td class="check-yes">Unlimited</td>
+                        <td class="check-yes">Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td>Multi-Metric Analysis</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>File Upload (PDF/DOCX)</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>OCR Image Scanning</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Detailed Reports</td>
+                        <td>Basic</td>
+                        <td class="check-yes">Advanced</td>
+                        <td class="check-yes">Enterprise</td>
+                    </tr>
+                    <tr>
+                        <td>API Access</td>
+                        <td class="check-no">✗</td>
+                        <td>1,000/day</td>
+                        <td class="check-yes">Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td>Priority Support</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-yes">24/7 Dedicated</td>
+                    </tr>
+                    <tr>
+                        <td>Custom Integrations</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>SLA Agreement</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-yes">✓</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="cta-features">
+        <h3>Ready to Get Started?</h3>
+        <p>Choose the perfect plan for your needs and start checking for plagiarism today</p>
+        <button class="btn-cta" onclick="location.href='/pricing'">View Pricing Plans →</button>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,547 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Your Activity & Statistics{% endblock %}
+
+{% block content %}
+<style>
+    .dashboard-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 3rem 2rem;
+        text-align: center;
+        color: white;
+        margin-bottom: 2rem;
+    }
+
+    .dashboard-hero h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        animation: fadeInDown 0.6s ease;
+    }
+
+    .dashboard-hero p {
+        font-size: 1rem;
+        opacity: 0.95;
+        animation: fadeInUp 0.6s ease;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem 3rem;
+    }
+
+    /* Stats Grid */
+    .dashboard-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 20px;
+        padding: 1.8rem;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(102,126,234,0.2);
+    }
+
+    .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 0.3rem;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    /* Plan Card */
+    .plan-card {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .plan-info h3 {
+        color: white;
+        font-size: 1.3rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .plan-info h3 span {
+        background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .plan-info p {
+        color: #94a3b8;
+    }
+
+    .btn-upgrade {
+        background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+        color: white;
+        border: none;
+        padding: 0.8rem 1.8rem;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-upgrade:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(245,158,11,0.4);
+    }
+
+    /* Recent Activity */
+    .recent-activity {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .recent-activity h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .activity-list {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .activity-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid #e2e8f0;
+        transition: all 0.3s;
+    }
+
+    .activity-item:hover {
+        background: #f8fafc;
+        transform: translateX(5px);
+    }
+
+    .activity-date {
+        color: #666;
+        font-size: 0.85rem;
+    }
+
+    .activity-score {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .activity-status {
+        padding: 0.25rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .activity-status.HIGH {
+        background: #fee;
+        color: #dc2626;
+    }
+
+    .activity-status.MODERATE {
+        background: #fffbeb;
+        color: #f59e0b;
+    }
+
+    .activity-status.LOW {
+        background: #ecfdf5;
+        color: #10b981;
+    }
+
+    .no-activity {
+        text-align: center;
+        color: #94a3b8;
+        padding: 2rem;
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .quick-actions h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+        color: #333;
+    }
+
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .action-card {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 1.2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .action-card:hover {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(102,126,234,0.3);
+    }
+
+    .action-icon {
+        font-size: 1.8rem;
+    }
+
+    /* Progress Section */
+    .progress-section {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .progress-section h3 {
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    .progress-bar-container {
+        background: #e2e8f0;
+        border-radius: 10px;
+        height: 20px;
+        overflow: hidden;
+        margin: 1rem 0;
+    }
+
+    .progress-bar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        height: 100%;
+        width: 0%;
+        transition: width 0.5s ease;
+        border-radius: 10px;
+    }
+
+    .progress-text {
+        color: #666;
+        font-size: 0.85rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .dashboard-container {
+            padding: 0 1rem 2rem;
+        }
+        
+        .plan-card {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .activity-item {
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="dashboard-hero">
+    <h1>👋 Welcome back, {{ user.name if user else 'User' }}!</h1>
+    <p>Track your plagiarism detection activity and statistics</p>
+</div>
+
+<div class="dashboard-container">
+    <!-- Stats Overview -->
+    <div class="dashboard-stats">
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-number" id="totalChecks">0</div>
+            <div class="stat-label">Total Documents Checked</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-number" id="avgSimilarity">0%</div>
+            <div class="stat-label">Average Similarity Score</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⚡</div>
+            <div class="stat-number" id="uniqueScore">0%</div>
+            <div class="stat-label">Average Uniqueness</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📅</div>
+            <div class="stat-number" id="memberSince">New</div>
+            <div class="stat-label">Member Since</div>
+        </div>
+    </div>
+
+    <!-- Usage Progress -->
+    <div class="progress-section">
+        <h3>📈 Daily Usage</h3>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="usageProgress"></div>
+        </div>
+        <div class="progress-text" id="usageText">0 of 5 free checks used today</div>
+    </div>
+
+    <!-- Plan Information -->
+    <div class="plan-card">
+        <div class="plan-info">
+            <h3>Current Plan: <span id="userPlan">Free</span></h3>
+            <p>Upgrade to Pro for unlimited checks, file uploads, and OCR scanning</p>
+        </div>
+        <button class="btn-upgrade" onclick="location.href='/pricing'">🚀 Upgrade Plan →</button>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="recent-activity">
+        <h2>📋 Recent Activity</h2>
+        <div id="activityList" class="activity-list">
+            <div class="no-activity">No recent activity. Start checking for plagiarism!</div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h2>⚡ Quick Actions</h2>
+        <div class="actions-grid">
+            <button class="action-card" onclick="location.href='/'">
+                <span class="action-icon">🔍</span>
+                <span>New Analysis</span>
+            </button>
+            <button class="action-card" onclick="location.href='/pricing'">
+                <span class="action-icon">💎</span>
+                <span>Upgrade Plan</span>
+            </button>
+            <button class="action-card" onclick="location.href='/api'">
+                <span class="action-icon">🔑</span>
+                <span>Get API Key</span>
+            </button>
+            <button class="action-card" onclick="downloadReport()">
+                <span class="action-icon">📥</span>
+                <span>Download Report</span>
+            </button>
+            <button class="action-card" onclick="location.href='/support'">
+                <span class="action-icon">💬</span>
+                <span>Contact Support</span>
+            </button>
+            <button class="action-card" onclick="clearHistory()">
+                <span class="action-icon">🗑️</span>
+                <span>Clear History</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Load dashboard data
+function loadDashboard() {
+    const history = JSON.parse(localStorage.getItem('plagiarism_history') || '[]');
+    const todayChecks = getTodayChecks(history);
+    
+    // Update stats
+    document.getElementById('totalChecks').textContent = history.length;
+    
+    if (history.length > 0) {
+        const avgSimilarity = history.reduce((sum, item) => sum + item.similarity, 0) / history.length;
+        const avgUnique = 100 - avgSimilarity;
+        document.getElementById('avgSimilarity').textContent = avgSimilarity.toFixed(1) + '%';
+        document.getElementById('uniqueScore').textContent = avgUnique.toFixed(1) + '%';
+    }
+    
+    // Update usage progress
+    const usedToday = todayChecks.length;
+    const remaining = 5 - usedToday;
+    const percentage = (usedToday / 5) * 100;
+    document.getElementById('usageProgress').style.width = percentage + '%';
+    document.getElementById('usageText').textContent = `${usedToday} of 5 free checks used today (${remaining} remaining)`;
+    
+    // Set member since (first check date or current date)
+    if (history.length > 0) {
+        const firstDate = new Date(history[history.length - 1].date);
+        document.getElementById('memberSince').textContent = firstDate.toLocaleDateString();
+    } else {
+        document.getElementById('memberSince').textContent = new Date().toLocaleDateString();
+    }
+    
+    // Get user plan from localStorage or default to Free
+    const userPlan = localStorage.getItem('user_plan') || 'Free';
+    document.getElementById('userPlan').textContent = userPlan;
+    if (userPlan !== 'Free') {
+        document.getElementById('usageText').textContent = 'Unlimited checks on Pro plan!';
+        document.getElementById('usageProgress').style.width = '100%';
+        document.getElementById('usageProgress').style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+    }
+    
+    // Display recent activity
+    if (history.length === 0) {
+        document.getElementById('activityList').innerHTML = '<div class="no-activity">✨ No activity yet. Start checking for plagiarism!</div>';
+    } else {
+        const recent = history.slice(-8).reverse();
+        const activityHtml = recent.map(item => `
+            <div class="activity-item">
+                <div class="activity-date">📅 ${new Date(item.date).toLocaleString()}</div>
+                <div class="activity-score">Similarity: <strong>${item.similarity}%</strong></div>
+                <div class="activity-status ${item.riskLevel}">${item.riskLevel || (item.similarity >= 70 ? 'HIGH' : (item.similarity >= 40 ? 'MODERATE' : 'LOW'))}</div>
+            </div>
+        `).join('');
+        document.getElementById('activityList').innerHTML = activityHtml;
+    }
+}
+
+function getTodayChecks(history) {
+    const today = new Date().toDateString();
+    return history.filter(item => new Date(item.date).toDateString() === today);
+}
+
+function downloadReport() {
+    const history = JSON.parse(localStorage.getItem('plagiarism_history') || '[]');
+    if (history.length === 0) {
+        showError('No reports to download. Start checking for plagiarism first!');
+        return;
+    }
+    
+    const userPlan = localStorage.getItem('user_plan') || 'Free';
+    const avgSimilarity = history.reduce((sum, item) => sum + item.similarity, 0) / history.length;
+    
+    const report = {
+        user: '{{ user.email if user else "Guest" }}',
+        plan: userPlan,
+        generated: new Date().toISOString(),
+        total_checks: history.length,
+        average_similarity: avgSimilarity.toFixed(1) + '%',
+        history: history.map(item => ({
+            date: item.date,
+            similarity: item.similarity + '%',
+            riskLevel: item.riskLevel || (item.similarity >= 70 ? 'HIGH' : (item.similarity >= 40 ? 'MODERATE' : 'LOW'))
+        }))
+    };
+    
+    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `plagiarism-report-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    showError('✅ Report downloaded successfully!', 'success');
+}
+
+function clearHistory() {
+    if (confirm('Are you sure you want to clear all your plagiarism check history? This action cannot be undone.')) {
+        localStorage.removeItem('plagiarism_history');
+        loadDashboard();
+        showError('🗑️ History cleared successfully!', 'success');
+    }
+}
+
+function showError(message, type = 'error') {
+    const errorDiv = document.getElementById('error');
+    if (errorDiv) {
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        
+        if (type === 'success') {
+            errorDiv.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+        } else {
+            errorDiv.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+        }
+        
+        setTimeout(() => {
+            errorDiv.style.display = 'none';
+        }, 3000);
+    } else {
+        alert(message);
+    }
+}
+
+// Load dashboard when page loads
+loadDashboard();
+</script>
+{% endblock %}
